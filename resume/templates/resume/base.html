@@ -62,6 +62,12 @@
                     <p class="mb-1"><i class="fas fa-phone"></i> {{ profile.phone }}</p>
                     {% endif %}
                 </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Полезное</h5>
+                    <button class="tour-restart-btn" onclick="restartTour()">
+                        <i class="fas fa-sync-alt"></i> Показать обзор резюме
+                    </button>
+                </div>
             </div>
             <hr class="my-3">
             <div class="text-center">
@@ -86,6 +92,13 @@
     
     <!-- Tour JS -->
     <script src="{% static 'resume/js/tour.js' %}"></script>
+    
+    <script>
+    function restartTour() {
+        localStorage.removeItem('tour-completed');
+        location.reload();
+    }
+    </script>
     
     {% block extra_js %}{% endblock %}
 </body>

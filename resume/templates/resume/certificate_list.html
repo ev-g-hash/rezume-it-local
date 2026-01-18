@@ -1,0 +1,114 @@
+<!-- resume/templates/resume/certificate_list.html -->
+{% extends 'resume/base.html' %}
+{% block title %}Сертификаты - IT Резюме{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="section-title text-center mb-5">Сертификаты</h1>
+    
+    <div class="row">
+        {% for certificate in certificates %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card certificate-card h-100">
+                <!-- Добавляем data-bs-toggle для модального окна -->
+                <img src="{{ certificate.certificate_image.url }}" 
+                     class="card-img-top certificate-image-modal" 
+                     alt="{{ certificate.title }}"
+                     data-bs-toggle="modal" 
+                     data-bs-target="#certificateModal{{ certificate.id }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ certificate.title }}</h5>
+                    <p class="card-text text-muted">{{ certificate.organization }}</p>
+                    <p class="card-text">{{ certificate.description|truncatechars:100 }}</p>
+                    <small class="text-muted">
+                        <i class="fas fa-calendar"></i> {{ certificate.issue_date|date:"d.m.Y" }}
+                    </small>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'certificate_detail' certificate.pk %}" 
+                       class="btn btn-primary w-100">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Модальное окно для просмотра сертификата -->
+        <div class="modal fade" id="certificateModal{{ certificate.id }}" tabindex="-1" aria-labelledby="certificateModalLabel{{ certificate.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="certificateModalLabel{{ certificate.id }}">
+                            {{ certificate.title }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="{{ certificate.certificate_image.url }}" 
+                             class="img-fluid" 
+                             alt="{{ certificate.title }}"
+                             style="max-height: 70vh; object-fit: contain;">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <a href="{% url 'certificate_detail' certificate.pk %}" class="btn btn-primary">
+                            Подробнее
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Пагинация -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Навигация по страницам">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<style>
+/* Дополнительные стили для сертификатов */
+.certificate-card .card-img-top {
+    height: 250px;
+    object-fit: contain; /* Показываем полностью без обрезки */
+    object-position: center;
+    background: #f8f9fa; /* Фон для пустых мест */
+    transition: transform 0.3s ease;
+}
+
+.certificate-card .card-img-top:hover {
+    transform: scale(1.02); /* Легкое увеличение при наведении */
+}
+
+/* Стили для модального окна */
+.modal-body img {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}

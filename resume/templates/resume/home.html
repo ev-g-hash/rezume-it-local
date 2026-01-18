@@ -1,0 +1,131 @@
+<!-- resume/templates/resume/home.html -->
+{% extends 'resume/base.html' %}
+{% block title %}Главная - IT Резюме{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="{{ profile.first_name }} {{ profile.last_name }}" 
+                     class="profile-image img-fluid rounded-circle">
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <h1 class="hero-title">
+                    {{ profile.first_name }} {{ profile.last_name }}
+                </h1>
+                <h2 class="hero-subtitle text-muted">{{ profile.position }}</h2>
+                <p class="hero-bio">{{ profile.bio }}</p>
+                
+                {% if profile.github_url %}
+                <a href="{{ profile.github_url }}" class="btn btn-outline-dark me-2" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Навыки -->
+{% comment %} {% if skills_by_category %}
+<div class="skills-section py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Навыки и технологии</h2>
+        
+        <div class="row">
+            {% for category, skills in skills_by_category.items %}
+            <div class="col-md-6 mb-4">
+                <div class="skill-category">
+                    <h4 class="skill-category-title">{{ category|title }}</h4>
+                    {% for skill in skills %}
+                    <div class="skill-item mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="skill-name">{{ skill.name }}</span>
+                            <span class="skill-level">{{ skill.level }}%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" 
+                                 style="width: {{ skill.level }}%"
+                                 role="progressbar">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %} {% endcomment %}
+
+{% comment %} <!-- Рекомендуемые сертификаты -->
+{% if featured_certificates %}
+<div class="certificates-section py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Сертификаты</h2>
+        <div class="row">
+            {% for certificate in featured_certificates %}
+            <div class="col-md-4 mb-4">
+                <div class="card certificate-card h-100">
+                    <img src="{{ certificate.certificate_image.url }}" 
+                         class="card-img-top" alt="{{ certificate.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ certificate.title }}</h5>
+                        <p class="card-text text-muted">{{ certificate.organization }}</p>
+                        <a href="{% url 'certificate_detail' certificate.pk %}" 
+                           class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <a href="{% url 'certificate_list' %}" class="btn btn-outline-primary">
+                Все сертификаты
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %} {% endcomment %}
+
+<!-- Рекомендуемые проекты -->
+{% if featured_projects %}
+<div class="projects-section py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Проекты</h2>
+        <div class="row">
+            {% for project in featured_projects %}
+            <div class="col-md-4 mb-4">
+                <div class="card project-card h-100">
+                    {% if project.images.first %}
+                    <img src="{{ project.images.first.image.url }}" 
+                         class="card-img-top" alt="{{ project.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text">{{ project.short_description }}</p>
+                        <div class="technologies mb-3">
+                            {% for tech in project.get_technologies_list %}
+                            <span class="badge bg-secondary me-1">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                        <a href="{% url 'project_detail' project.pk %}" 
+                           class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <a href="{% url 'project_list' %}" class="btn btn-outline-primary">
+                Все проекты
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

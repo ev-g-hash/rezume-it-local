@@ -1,0 +1,128 @@
+<!-- resume/templates/resume/profile_detail.html -->
+{% extends 'resume/base.html' %}
+{% block title %}Обо мне - IT Резюме{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Фото и основная информация -->
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    {% if profile.photo %}
+                    <img src="{{ profile.photo.url }}" 
+                         alt="{{ profile.first_name }} {{ profile.last_name }}" 
+                         class="profile-image-detail img-fluid rounded-circle mb-3">
+                    {% endif %}
+                    <h2 class="card-title">{{ profile.first_name }} {{ profile.last_name }}</h2>
+                    <p class="text-muted">{{ profile.position }}</p>
+                    
+                    <!-- Контакты -->
+                    <div class="contact-info">
+                        <p class="mb-2">
+                            <i class="fas fa-envelope text-primary"></i>
+                            <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+                        </p>
+                        <p class="mb-2">
+                            <i class="fas fa-phone text-primary"></i>
+                            {{ profile.phone }}
+                        </p>
+                        
+                        <!-- Социальные сети -->
+                        <div class="social-links mt-3">
+                            {% if profile.github_url %}
+                            <a href="{{ profile.github_url }}" class="btn btn-outline-dark me-2" target="_blank">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                            {% endif %}
+                            {% if profile.linkedin_url %}
+                            <a href="{{ profile.linkedin_url }}" class="btn btn-outline-primary me-2" target="_blank">
+                                <i class="fab fa-linkedin"></i> LinkedIn
+                            </a>
+                            {% endif %}
+                            {% if profile.telegram_url %}
+                            <a href="{{ profile.telegram_url }}" class="btn btn-outline-info" target="_blank">
+                                <i class="fab fa-telegram"></i> Telegram
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <!-- Описание -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">Обо мне</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ profile.bio }}</p>
+                </div>
+            </div>
+            
+            <!-- Навыки -->
+            {% if skills_by_category %}
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Навыки и технологии</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for category, skills in skills_by_category.items %}
+                        <div class="col-md-6 mb-4">
+                            <div class="skill-category-detail">
+                                <h5 class="skill-category-title">{{ category|title }}</h5>
+                                {% for skill in skills %}
+                                <div class="skill-item mb-3">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="skill-name">{{ skill.name }}</span>
+                                        <span class="skill-level">{{ skill.level }}%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" 
+                                             style="width: {{ skill.level }}%"
+                                             role="progressbar">
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-image-detail {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.contact-info a {
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+.social-links .btn {
+    margin-bottom: 0.5rem;
+}
+
+.skill-category-detail {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    height: 100%;
+}
+</style>
+{% endblock %}

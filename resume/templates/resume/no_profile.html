@@ -1,0 +1,29 @@
+<!-- resume/templates/resume/no_profile.html -->
+{% extends 'resume/base.html' %}
+{% block title %}Профиль не найден - IT Резюме{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center">
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-info-circle"></i> Профиль не настроен
+            </h4>
+            <p>Профиль пока не создан. Пожалуйста, создайте профиль в админ-панели:</p>
+            <a href="/admin/" class="btn btn-primary">
+                <i class="fas fa-cog"></i> Открыть админ-панель
+            </a>
+        </div>
+        
+        <div class="mt-4">
+            <h5>Инструкция:</h5>
+            <ol class="text-start">
+                <li>Зайдите в <a href="/admin/">админ-панель</a></li>
+                <li>Создайте профиль в разделе "Profiles"</li>
+                <li>Добавьте навыки в том же профиле</li>
+                <li>Вернитесь на эту страницу</li>
+            </ol>
+        </div>
+    </div>
+</div>
+{% endblock %}

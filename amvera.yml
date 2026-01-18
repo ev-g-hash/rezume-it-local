@@ -1,0 +1,21 @@
+version: null
+meta:
+  environment: python
+  toolchain:
+    name: pip
+    version: "3.12"
+build:
+  requirementsPath: requirements.txt
+  useCache: true
+run:
+  command: |
+    python manage.py migrate --noinput &&    
+    gunicorn resume_it.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 30
+  persistenceMount: /data
+  containerPort: "8000"
+serviceType: compute
+env:
+  - name: DJANGO_SETTINGS_MODULE
+    value: resume_it.settings
+  - name: PYTHONUNBUFFERED
+    value: "1"

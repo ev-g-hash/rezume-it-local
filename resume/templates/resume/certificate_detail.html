@@ -1,0 +1,113 @@
+<!-- resume/templates/resume/certificate_detail.html -->
+{% extends 'resume/base.html' %}
+{% block title %}{{ certificate.title }} - Сертификат{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Изображение сертификата -->
+            <div class="card mb-4">
+                <div class="certificate-detail-image-container">
+                    <div class="certificate-detail-image" 
+                         style="background-image: url('{{ certificate.certificate_image.url }}');">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Информация о сертификате -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ certificate.title }}</h2>
+                    <p class="text-muted">{{ certificate.organization }}</p>
+                    
+                    <hr>
+                    
+                    <!-- Детали -->
+                    <div class="certificate-details">
+                        <p class="mb-2">
+                            <i class="fas fa-calendar text-primary"></i>
+                            <strong>Дата выдачи:</strong><br>
+                            {{ certificate.issue_date|date:"d.m.Y" }}
+                        </p>
+                        
+                        {% if certificate.credential_id %}
+                        <p class="mb-2">
+                            <i class="fas fa-id-card text-primary"></i>
+                            <strong>ID сертификата:</strong><br>
+                            {{ certificate.credential_id }}
+                        </p>
+                        {% endif %}
+                        
+                        {% if certificate.credential_url %}
+                        <p class="mb-3">
+                            <i class="fas fa-external-link-alt text-primary"></i>
+                            <strong>Верификация:</strong><br>
+                            <a href="{{ certificate.credential_url }}" target="_blank">
+                                Проверить сертификат
+                            </a>
+                        </p>
+                        {% endif %}
+                        
+                        <hr>
+                        
+                        <!-- Описание -->
+                        <h5>Описание</h5>
+                        <p>{{ certificate.description }}</p>
+                        
+                        <!-- Кнопка назад -->
+                        <div class="mt-4">
+                            <a href="{% url 'certificate_list' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left"></i> Все сертификаты
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Стили для детального просмотра сертификата */
+.certificate-detail-image-container {
+    width: 100%;
+    aspect-ratio: 4/3; /* Фиксированное соотношение сторон 4:3 */
+    background: #f8f9fa;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.certificate-detail-image {
+    width: 100%;
+    height: 100%;
+    background-size: contain; /* Вписываем полностью без обрезки */
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.3s ease;
+}
+
+.certificate-detail-image:hover {
+    transform: scale(1.02); /* Легкое увеличение при наведении */
+}
+
+.certificate-details a {
+    text-decoration: none;
+    color: #0d6efd;
+}
+
+.certificate-details a:hover {
+    text-decoration: underline;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .certificate-detail-image-container {
+        aspect-ratio: 3/4; /* Более вертикальное соотношение для мобильных */
+    }
+}
+</style>
+{% endblock %}

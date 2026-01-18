@@ -1,0 +1,91 @@
+<!-- resume/templates/resume/project_list.html -->
+{% extends 'resume/base.html' %}
+{% block title %}Проекты - IT Резюме{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="section-title text-center mb-5">Проекты</h1>
+    
+    <!-- Фильтр по технологиям -->
+    {% comment %} {% if technologies %}
+    <div class="text-center mb-4">
+        <div class="btn-group" role="group">
+            <a href="{% url 'project_list' %}" 
+               class="btn {% if not current_tech %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                Все
+            </a>
+            {% for tech in technologies %}
+            <a href="?tech={{ tech }}" 
+               class="btn {% if current_tech == tech %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                {{ tech }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %} {% endcomment %}
+    
+    <div class="row">
+        {% for project in projects %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card project-card h-100">
+                {% if project.images.first %}
+                <img src="{{ project.images.first.image.url }}" 
+                     class="card-img-top" alt="{{ project.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    <p class="card-text">{{ project.short_description }}</p>
+                    <div class="technologies mb-3">
+                        {% for tech in project.get_technologies_list %}
+                        <span class="badge bg-secondary me-1 mb-1">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'project_detail' project.pk %}" 
+                           class="btn btn-primary">Подробнее</a>
+                        {% if project.demo_url %}
+                        <a href="{{ project.demo_url }}" class="btn btn-success" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Демо
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Пагинация -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Навигация по страницам">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_tech %}&tech={{ current_tech }}{% endif %}">Предыдущая</a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% if current_tech %}&tech={{ current_tech }}{% endif %}">{{ num }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_tech %}&tech={{ current_tech }}{% endif %}">Следующая</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
